@@ -30,3 +30,11 @@ With the `non-pds` package, the experiment works because the top-level module is
 With the `without` package, the experiment fails with the error `ModuleNotFoundError: No module named 'pds.experiment'`. This seems to be caused by Python discovering that the `pds` module exists in `site-packages` and sets its `__path__` attribute as the root for all future lookups of `pds` submodules. This is fine for `pds.client_api` but prevents the console script from finding `pds.experiment.main`.
 
 The `with` package has a top-level module `pds` but also declares it as a namespace package, which is the ideal case. However, `pds.client_api` is an issue here, too. The error message is `ModuleNotFoundError: No module named 'pds.api_client'`. In this case, Python seems to know now that `pds` is strictly a namespace, but then cannot resolve any non-namespace usage of `pds`, as in the case for `pds.client_api`.
+
+
+## 🏆 Solution
+
+`pds.client_api` should declare `pds` as a namespace package.
+
+**Note:** it's possible that even if `pds` were a namespace package in `pds.client_api`, the `without` example might not work. But seriously, an organization as large as PDS should be using namespace packages anyway 😄
+
